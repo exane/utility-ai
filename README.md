@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/exane/utility-ai.svg?branch=master)](https://travis-ci.org/exane/utility-ai)
+
+---
+
 # Utility Ai
 
 ## A small Utility Ai Framework
