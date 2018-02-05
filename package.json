@@ -1,0 +1,17 @@
+{
+  "name": "UtilityAi",
+  "version": "0.0.1",
+  "description": "A small Utility Ai Framework",
+  "main": "UtilityAi.js",
+  "author": "Tim Meier <raco0n@gmx.de>",
+  "license": "MIT",
+  "scripts": {
+    "mocha": "./node_modules/mocha/bin/mocha",
+    "test": "yarn run mocha .",
+    "test:watch": "yarn run test --watch --reporter min"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0"
+  }
+}
