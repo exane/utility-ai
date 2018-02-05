@@ -10,7 +10,7 @@
 ### Usage
 
 ```js
-  const UtilityAi = require("UtilityAi")
+  const UtilityAi = require("utility-ai")
 
   utility_ai = new UtilityAi
 
