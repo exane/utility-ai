@@ -26,19 +26,19 @@ describe("UtilityAi", () => {
     })
 
     it("registers actions", () => {
-      expect(utility_ai.actions).to.be.an("array").that.has.lengthOf(0)
+      expect(utility_ai._actions).to.be.an("array").that.has.lengthOf(0)
 
       utility_ai.addAction("test", () => {})
 
-      expect(utility_ai.actions).to.be.an("array").that.has.lengthOf(1)
-      const [action] = utility_ai.actions
+      expect(utility_ai._actions).to.be.an("array").that.has.lengthOf(1)
+      const [action] = utility_ai._actions
       expect(action).to.be.an("object")
       expect(action).to.have.a.property("description", "test")
 
       utility_ai.addAction("test2", () => {})
 
-      expect(utility_ai.actions).to.be.an("array").that.has.lengthOf(2)
-      const [,action2] = utility_ai.actions
+      expect(utility_ai._actions).to.be.an("array").that.has.lengthOf(2)
+      const [,action2] = utility_ai._actions
       expect(action2).to.be.an("object")
       expect(action2).to.have.a.property("description", "test2")
     })
@@ -47,7 +47,7 @@ describe("UtilityAi", () => {
       let cb_called = false
 
       utility_ai.addAction("test", action => {
-        expect(action).to.be.an("object").with.property("addScorer")
+        expect(action).to.be.an("object").with.property("score")
         cb_called = true
       })
 
@@ -62,19 +62,19 @@ describe("UtilityAi", () => {
         utility_ai.addAction("test", a => action = a)
       })
 
-      describe("#addScorer", () => {
+      describe("#score", () => {
 
         it("is a function", () => {
-          expect(action.addScorer).to.be.a("function")
+          expect(action.score).to.be.a("function")
         })
 
         it("requires a description, score and callback", () => {
-          expect(() => action.addScorer()).to.throw(/missing description/i)
-          expect(() => action.addScorer("test")).to.throw(/missing callback/i)
-          expect(() => action.addScorer("test", () => {})).to.not.throw()
+          expect(() => action.score()).to.throw(/missing description/i)
+          expect(() => action.score("test")).to.throw(/missing callback/i)
+          expect(() => action.score("test", () => {})).to.not.throw()
         })
 
-      }) // # addScorer
+      }) // # score
 
       describe("#condition", () => {
 
@@ -88,7 +88,7 @@ describe("UtilityAi", () => {
         })
 
         it("does not execute scorers if condition fails", () => {
-          action.addScorer("test", () => 20)
+          action.score("test", () => 20)
 
           expect(action.evaluate()).to.be.eq(20)
 
@@ -110,15 +110,15 @@ describe("UtilityAi", () => {
           utility_ai.addAction("attack", _action => {
             action = _action
 
-            _action.addScorer("can attack", (entity) => {
+            _action.score("can attack", (entity) => {
               return entity.can_attack && 20
             })
 
-            _action.addScorer("can kill enemy", (entity) => {
+            _action.score("can kill enemy", (entity) => {
               return entity.can_kill_enemy && 40
             })
 
-            _action.addScorer("has low health", (entity) => {
+            _action.score("has low health", (entity) => {
               return entity.has_low_health && -20
             })
 
@@ -171,15 +171,15 @@ describe("UtilityAi", () => {
 
       utility_ai.addAction("attack", action => {
 
-        action.addScorer("can attack", ({ entity }) => {
+        action.score("can attack", ({ entity }) => {
           return entity.can_attack && 20
         })
 
-        action.addScorer("can kill enemy", ({ entity }) => {
+        action.score("can kill enemy", ({ entity }) => {
           return entity.can_kill_enemy && 40
         })
 
-        action.addScorer("has low health", ({ entity }) => {
+        action.score("has low health", ({ entity }) => {
           return entity.has_low_health && -20
         })
 
@@ -187,15 +187,15 @@ describe("UtilityAi", () => {
 
       utility_ai.addAction("heal", action => {
 
-        action.addScorer("can heal", ({ entity }) => {
+        action.score("can heal", ({ entity }) => {
           return entity.can_heal && 20
         })
 
-        action.addScorer("is full hp", ({ entity }) => {
+        action.score("is full hp", ({ entity }) => {
           return entity.is_full_hp && -60
         })
 
-        action.addScorer("has low health", ({ entity }) => {
+        action.score("has low health", ({ entity }) => {
           return entity.has_low_health && 40
         })
 

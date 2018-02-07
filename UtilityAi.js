@@ -2,7 +2,7 @@ class Action {
 
   constructor(description, callback) {
     this.description = description
-    this.scores = []
+    this._scores = []
     this._condition = () => true
 
     callback(this)
@@ -16,16 +16,16 @@ class Action {
     this._condition = callback
   }
 
-  addScorer(description, callback) {
+  score(description, callback) {
 
     if (!description) {
-      throw Error("UtilityAi#Action#addScorer: Missing description")
+      throw Error("UtilityAi#Action#score: Missing description")
     }
     if (!callback) {
-      throw Error("UtilityAi#Action#addScorer: Missing callback")
+      throw Error("UtilityAi#Action#score: Missing callback")
     }
 
-    this.scores.push({
+    this._scores.push({
       description,
       callback
     })
@@ -35,7 +35,7 @@ class Action {
   evaluate(data) {
     if (!this._condition(data)) return -Infinity
 
-    return this.scores
+    return this._scores
       .map(score => score.callback(data))
       .reduce((acc, score) => acc + score, 0)
   }
@@ -45,7 +45,7 @@ class Action {
 module.exports = class UtilityAi {
 
   constructor() {
-    this.actions = []
+    this._actions = []
   }
 
   addAction(description, callback) {
@@ -58,11 +58,11 @@ module.exports = class UtilityAi {
 
     const action = new Action(description, callback)
 
-    this.actions.push(action)
+    this._actions.push(action)
   }
 
   evaluate(data) {
-    return this.actions
+    return this._actions
       .map(action => ({
         action: action.description,
         score: action.evaluate(data)
