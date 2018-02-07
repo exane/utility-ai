@@ -39,12 +39,31 @@ class Action {
     return 0
   }
 
-  evaluate(data) {
-    if (!this._condition(data)) return -Infinity
+  log(...msg) {
+    if (!this._print_debug) return
+    console.log(...msg)
+  }
 
-    return this._scores
-      .map(score => this._validateScore(score.callback(data)))
+  evaluate(data, debug = false) {
+    this._print_debug = debug
+
+    this.log("Evaluate Action: ", this.description)
+    if (!this._condition(data)) {
+      this.log("Condition not fulfilled")
+      return -Infinity
+    }
+
+    const score = this._scores
+      .map(score => {
+        const _score = this._validateScore(score.callback(data))
+        this.log("- ", score.description, _score)
+        return _score
+      })
       .reduce((acc, score) => acc + score, 0)
+
+    this.log("Final Score: ", score)
+
+    return score
   }
 
 }
@@ -68,11 +87,11 @@ module.exports = class UtilityAi {
     this._actions.push(action)
   }
 
-  evaluate(data) {
+  evaluate(data, debug = false) {
     return this._actions
       .map(action => ({
         action: action.description,
-        score: action.evaluate(data)
+        score: action.evaluate(data, debug)
       }))
       .reduce((acc, action) => acc.score !== undefined && acc.score > action.score ? acc : action, {})
   }
