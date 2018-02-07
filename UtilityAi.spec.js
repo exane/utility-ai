@@ -76,6 +76,32 @@ describe("UtilityAi", () => {
 
       }) // # addScorer
 
+      describe("#condition", () => {
+
+        it("is a function", () => {
+          expect(action.condition).to.be.a("function")
+        })
+
+        it("expects a callback as param", () => {
+          expect(() => action.condition()).to.throw(/missing callback/i)
+          expect(() => action.condition(() => {})).to.not.throw()
+        })
+
+        it("does not execute scorers if condition fails", () => {
+          action.addScorer("test", () => 20)
+
+          expect(action.evaluate()).to.be.eq(20)
+
+          action.condition(data => {
+            return data.is_true === true
+          })
+
+          expect(action.evaluate({ is_true: true })).to.be.eq(20)
+          expect(action.evaluate({ is_true: false })).to.be.eq(-Infinity)
+        })
+
+      }) // #condition
+
       describe("#evaluate", () => {
 
         it("evaluates score", () => {

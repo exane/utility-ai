@@ -3,8 +3,17 @@ class Action {
   constructor(description, callback) {
     this.description = description
     this.scores = []
+    this._condition = () => true
 
     callback(this)
+  }
+
+  condition(callback) {
+    if (!callback) {
+      throw Error("UtilityAi#Action#condition: Missing callback")
+    }
+
+    this._condition = callback
   }
 
   addScorer(description, callback) {
@@ -24,13 +33,11 @@ class Action {
   }
 
   evaluate(data) {
+    if (!this._condition(data)) return -Infinity
+
     return this.scores
-      .map(score => {
-        return score.callback(data)
-      })
-      .reduce((acc, score) => {
-        return acc + score
-      }, 0)
+      .map(score => score.callback(data))
+      .reduce((acc, score) => acc + score, 0)
   }
 
 }
@@ -56,17 +63,11 @@ module.exports = class UtilityAi {
 
   evaluate(data) {
     return this.actions
-      .map(action => {
-        const res = {
-          action: action.description,
-          score: action.evaluate(data)
-        }
-
-        return res
-      })
-      .reduce((acc, action) => {
-        return acc.score !== undefined && acc.score > action.score ? acc : action
-      }, {})
+      .map(action => ({
+        action: action.description,
+        score: action.evaluate(data)
+      }))
+      .reduce((acc, action) => acc.score !== undefined && acc.score > action.score ? acc : action, {})
   }
 
 }
