@@ -7,6 +7,13 @@
 
 ## A small Utility Ai Framework
 
+### Install
+
+```sh
+npm install utility-ai
+yarn add utility-ai
+```
+
 ### Usage
 
 ```js
