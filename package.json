@@ -1,6 +1,6 @@
 {
   "name": "utility-ai",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A small Utility Ai Framework",
   "main": "UtilityAi.js",
   "author": "Tim Meier <raco0n@gmx.de>",
