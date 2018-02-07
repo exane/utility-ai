@@ -32,11 +32,18 @@ class Action {
 
   }
 
+  _validateScore(score) {
+    if (!isNaN(score) && typeof score === "number") {
+      return score
+    }
+    return 0
+  }
+
   evaluate(data) {
     if (!this._condition(data)) return -Infinity
 
     return this._scores
-      .map(score => score.callback(data))
+      .map(score => this._validateScore(score.callback(data)))
       .reduce((acc, score) => acc + score, 0)
   }
 

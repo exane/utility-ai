@@ -74,6 +74,33 @@ describe("UtilityAi", () => {
           expect(() => action.score("test", () => {})).to.not.throw()
         })
 
+        it("evaluates as 0 if no number is returned", () => {
+          action.score("test", () => {})
+          expect(action.evaluate()).to.be.eq(0)
+
+          action.score("test", () => { return "10" })
+          expect(action.evaluate()).to.be.eq(0)
+
+          action.score("test", () => { return null })
+          expect(action.evaluate()).to.be.eq(0)
+
+          action.score("test", () => { return 10 })
+          expect(action.evaluate()).to.be.eq(10)
+
+          action.score("test", () => { return 10.10 })
+          expect(action.evaluate()).to.be.eq(20.10)
+
+          action.score("test", () => { return true })
+          expect(action.evaluate()).to.be.eq(20.10)
+
+          action.score("test", () => { return false })
+          expect(action.evaluate()).to.be.eq(20.10)
+
+          action.score("test", () => { return "10.10" })
+          expect(action.evaluate()).to.be.eq(20.10)
+
+        })
+
       }) // # score
 
       describe("#condition", () => {
