@@ -24,6 +24,16 @@ yarn add utility-ai
   // define your actions e.g "Move to Enemy", "Fire at Enemy", "Move to Cover", "Reload Gun"
   utility_ai.addAction("Move to Enemy", action => {
 
+    // pre-conditions for actions, if not fulfilled all actions will be skipped
+    action.condition(({ player }) => {
+      if (player.isStuck()) {
+        return false
+      }
+
+      // explicit return of true needed to fulfill condition
+      return true
+    })
+
     // each score expects a number as return value, the higher the better the action will be weighted
     action.score("Distance to Enemy", ({ player, enemy }) => {
       return player.distanceTo(enemy)

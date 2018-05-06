@@ -127,6 +127,21 @@ describe("UtilityAi", () => {
           expect(action.evaluate({ is_true: false })).to.be.eq(-Infinity)
         })
 
+        it("evaluates missing return value as false", () => {
+          action.score("test", () => 20)
+
+          expect(action.evaluate()).to.be.eq(20)
+
+          action.condition(data => {
+            if (data.is_true) {
+              return true
+            }
+          })
+
+          expect(action.evaluate({ is_true: true })).to.be.eq(20)
+          expect(action.evaluate({ is_true: false })).to.be.eq(-Infinity)
+        })
+
       }) // #condition
 
       describe("#evaluate", () => {
